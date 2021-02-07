@@ -1,5 +1,3 @@
-package project_1;
-
 public class Pixel {
     protected int r;
     protected int g;

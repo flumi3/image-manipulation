@@ -1,5 +1,3 @@
-package project_1;
-
 import java.io.*;
 import java.util.ArrayList;
 
