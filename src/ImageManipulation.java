@@ -21,7 +21,7 @@ public class ImageManipulation {
         this.numOfLines = Integer.parseInt(s[1]);
     }
 
-    protected String[] getFormatLines() {
+    private String[] getFormatLines() {
         String[] lines = new String[3];
         try {
             BufferedReader reader = new BufferedReader(new FileReader(this.path));
