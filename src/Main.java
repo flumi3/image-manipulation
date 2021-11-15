@@ -6,7 +6,7 @@ public class Main {
 
     private static boolean create_output_folder(String path) {
         File f = new File(path);
-        return f.mkdir();
+        return f.mkdirs();
     }
 
     public static void main(String[] args) {
@@ -15,29 +15,39 @@ public class Main {
 
         if (fileNames != null) {
             for (String fileName: fileNames) {
-                String outputPath = "./output/" + fileName;
+                String outputDir = "output/" + fileName.substring(0, fileName.lastIndexOf("."));
                 String filePath = inputPath + fileName;
-                ImageManipulation m = new ImageManipulation(filePath);
-                ArrayList<Pixel> pixels = m.getPixels();
-
-                // Create modifications of the ppm picture
-                ArrayList<Pixel> withoutBlue = m.removeBlueTones(pixels);
-                ArrayList<Pixel> increasedBlue = m.increaseBlue(pixels);
-                ArrayList<Pixel> increasedAll = m.increaseAll(pixels);
-                ArrayList<Pixel> decreasedColor = m.changeMaxColorValue(pixels, 5);
-                ArrayList<Integer> blackWhite = m.convertToPGM(pixels);
 
                 // Create output folder
-                if (!create_output_folder(outputPath)) {
+                if (!create_output_folder(outputDir)) {
                     System.out.println("Could not create output folder");
                 }
 
-                // Create output files
-                m.createPPM(withoutBlue, outputPath + "/without_blue_tones.ppm");
-                m.createPPM(increasedBlue, outputPath + "/increased_blue_tones.ppm");
-                m.createPPM(increasedAll, outputPath + "/increased_all_tones.ppm");
-                m.createPPM(decreasedColor, outputPath + "/decreased_color_value.ppm");
-                m.createPGM(blackWhite, outputPath + "/black_white.pgm");
+                // Create modifications of the ppm picture
+                ImageManipulation m = new ImageManipulation(filePath);
+                ArrayList<Pixel> pixels = m.getPixels();
+                ArrayList<Pixel> withoutBlue = m.removeBlueTones(pixels);
+                m.createPPM(withoutBlue, outputDir + "/without_blue_tones.ppm");
+
+                m = new ImageManipulation(filePath);
+                pixels = m.getPixels();
+                ArrayList<Pixel> increasedBlue = m.increaseBlue(pixels);
+                m.createPPM(increasedBlue, outputDir + "/increased_blue_tones.ppm");
+
+                m = new ImageManipulation(filePath);
+                pixels = m.getPixels();
+                ArrayList<Pixel> increasedAll = m.increaseAll(pixels);
+                m.createPPM(increasedAll, outputDir + "/increased_all_tones.ppm");
+
+                m = new ImageManipulation(filePath);
+                pixels = m.getPixels();
+                ArrayList<Integer> blackWhite = m.convertToPGM(pixels);
+                m.createPGM(blackWhite, outputDir + "/black_white.pgm");
+
+                m = new ImageManipulation(filePath);
+                pixels = m.getPixels();
+                ArrayList<Pixel> decreasedColor = m.changeMaxColorValue(pixels, 5);
+                m.createPPM(decreasedColor, outputDir + "/decreased_color_value.ppm");
             }
         }
     }
